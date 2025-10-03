@@ -1,0 +1,527 @@
+﻿@model IEnumerable<AppliedProg2.Models.Donation>
+
+@{
+    ViewData["Title"] = "All Donations";
+}
+
+<style>
+    :root {
+        --primary-black: #0a0a0a;
+        --dark-gray: #1a1a1a;
+        --light-gray: #2a2a2a;
+        --accent-purple: #a78bfa;
+        --light-purple: #c4b5fd;
+        --bright-purple: #8b5cf6;
+        --white: #ffffff;
+        --off-white: #f5f5f5;
+        --text-gray: #d1d5db;
+        --success-green: #10b981;
+        --warning-orange: #f59e0b;
+        --info-blue: #3b82f6;
+        --error-red: #ef4444;
+    }
+
+    .donations-container {
+        min-height: 100vh;
+        background: radial-gradient(circle at 20% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%), url('https://images.unsplash.com/photo-1690321607729-bce901c77324?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+        background-size: cover;
+        background-position: center;
+        background-blend-mode: overlay;
+        padding: 20px 0;
+        color: var(--white);
+    }
+
+    .page-header {
+        background: var(--light-gray);
+        color: var(--white);
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 20px 20px;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 3px solid var(--accent-purple);
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-new-donation {
+        background: linear-gradient(135deg, var(--accent-purple), var(--light-purple));
+        border: none;
+        border-radius: 8px;
+        padding: 12px 25px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
+        color: var(--primary-black);
+    }
+
+        .btn-new-donation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
+            background: linear-gradient(135deg, var(--light-purple), var(--accent-purple));
+        }
+
+    .donation-card {
+        border: 1px solid var(--light-gray);
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        background: var(--dark-gray);
+        overflow: hidden;
+        border-left: 4px solid var(--accent-purple);
+        height: 100%;
+    }
+
+        .donation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border-left-color: var(--light-purple);
+        }
+
+    .card-header {
+        background: var(--light-gray);
+        border-bottom: 1px solid var(--light-gray);
+        padding: 1rem 1.25rem;
+    }
+
+    .donation-badge {
+        border-radius: 20px;
+        padding: 6px 15px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        background: var(--dark-gray);
+    }
+
+    .card-title {
+        color: var(--white);
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    .donation-details {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+        .donation-details strong {
+            color: var(--off-white);
+        }
+
+    .card-footer {
+        background: var(--light-gray);
+        border-top: 1px solid var(--light-gray);
+        padding: 1rem 1.25rem;
+    }
+
+    .status-badge {
+        border-radius: 20px;
+        padding: 6px 15px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .special-instructions {
+        background: rgba(167, 139, 250, 0.1);
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-top: 0.75rem;
+        border-left: 3px solid var(--accent-purple);
+        font-size: 0.85rem;
+        color: var(--text-gray);
+    }
+
+    .empty-state {
+        background: var(--dark-gray);
+        border-radius: 12px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        margin: 2rem 0;
+        border: 1px solid var(--light-gray);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        color: var(--accent-purple);
+        margin-bottom: 1rem;
+    }
+
+    .summary-card {
+        background: var(--light-gray);
+        border: 1px solid var(--accent-purple);
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .summary-title {
+        color: var(--white);
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+        .summary-title i {
+            margin-right: 10px;
+            color: var(--accent-purple);
+        }
+
+    .summary-stats {
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+    }
+
+    .stat-item {
+        padding: 0 1rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--accent-purple);
+        display: block;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-gray);
+        margin-top: 0.5rem;
+    }
+
+    .donation-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .impact-alert {
+        background: var(--light-gray);
+        border: 1px solid var(--accent-purple);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+    /* Animation for new cards */
+    keyframes fadeInUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .donation-card {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Responsive design */
+    @@media (max-width: 768px) {
+        .page-header {
+            padding: 2rem 0;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .btn-new-donation {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .summary-stats {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .empty-state {
+            padding: 2rem 1rem;
+        }
+    }
+
+    /* Staggered animation for cards */
+    .donation-card:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+
+    .donation-card:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .donation-card:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    .donation-card:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+
+    .donation-card:nth-child(5) {
+        animation-delay: 0.5s;
+    }
+
+    .donation-card:nth-child(6) {
+        animation-delay: 0.6s;
+    }
+
+    .text-muted {
+        color: var(--text-gray) !important;
+    }
+
+    .text-primary {
+        color: var(--accent-purple) !important;
+    }
+
+    .text-warning {
+        color: var(--warning-orange) !important;
+    }
+
+    .bg-warning {
+        background-color: var(--warning-orange) !important;
+        color: var(--primary-black) !important;
+    }
+
+    .bg-info {
+        background-color: var(--info-blue) !important;
+        color: var(--white) !important;
+    }
+
+    .bg-danger {
+        background-color: var(--error-red) !important;
+        color: var(--white) !important;
+    }
+
+    .bg-success {
+        background-color: var(--success-green) !important;
+        color: var(--white) !important;
+    }
+
+    .bg-secondary {
+        background-color: var(--light-gray) !important;
+        color: var(--white) !important;
+    }
+
+    .alert-success {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid var(--success-green);
+        color: var(--success-green);
+    }
+</style>
+
+<div class="donations-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="header-content d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1 class="fw-bold display-5 mb-2">
+                        <i class="fas fa-hand-holding-heart"></i> All Donations
+                    </h1>
+                    <p class="lead mb-0" style="color: var(--text-gray);">Celebrating the generosity that makes a difference</p>
+                </div>
+                <a asp-action="Create" class="btn btn-new-donation">
+                    <i class="fas fa-plus"></i> Make New Donation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        @if (!Model.Any())
+        {
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <h3 class="fw-bold mb-3" style="color: var(--white);">No Donations Yet</h3>
+                <p class="mb-4" style="color: var(--text-gray);">Be the first to make a difference! Your donation can help communities in need.</p>
+                <a asp-action="Create" class="btn btn-new-donation">
+                    <i class="fas fa-plus"></i> Make First Donation
+                </a>
+            </div>
+        }
+        else
+        {
+            <!-- Donations Grid -->
+            <div class="row">
+                @foreach (var donation in Model)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="donation-card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span class="donation-badge @GetDonationTypeClass(donation.DonationType)">
+                                    <span class="donation-icon"><i class="@GetDonationTypeIcon(donation.DonationType)"></i></span>
+                                    @donation.DonationType
+                                </span>
+                                <small class="fw-bold" style="color: var(--text-gray);">
+                                    <i class="fas fa-calendar me-1"></i>@donation.DonationDate.ToString("MMM dd, yyyy")
+                                </small>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title">@donation.ItemDescription</h6>
+                                <div class="donation-details">
+                                    <p class="mb-2">
+                                        <strong><i class="fas fa-cube me-1"></i>Quantity:</strong>
+                                        <span class="fw-bold" style="color: var(--accent-purple);">@donation.Quantity @donation.Unit</span>
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong><i class="fas fa-map-marker-alt me-1"></i>Target Area:</strong>
+                                        @if (!string.IsNullOrEmpty(donation.TargetArea))
+                                        {
+                                            <span>@donation.TargetArea</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color: var(--text-gray);">General Relief</span>
+                                        }
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong><i class="fas fa-user me-1"></i>Donor:</strong>
+                                        @if (donation.User != null)
+                                        {
+                                            <span>@donation.User.FirstName @donation.User.LastName</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color: var(--text-gray);">Anonymous</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="status-badge @GetStatusClass(donation.Status)">
+                                        <i class="@GetStatusIcon(donation.Status) me-1"></i> @donation.Status
+                                    </span>
+                                    <small style="color: var(--text-gray);">
+                                        <i class="fas fa-clock me-1"></i>@donation.DonationDate.ToString("hh:mm tt")
+                                    </small>
+                                </div>
+                                @if (!string.IsNullOrEmpty(donation.SpecialInstructions))
+                                {
+                                    <div class="special-instructions">
+                                        <i class="fas fa-info-circle me-2" style="color: var(--accent-purple);"></i>
+                                        <small>@donation.SpecialInstructions</small>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Donation Summary -->
+            <div class="summary-card">
+                <h5 class="summary-title">
+                    <i class="fas fa-chart-line"></i> Donation Impact Summary
+                </h5>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count()</span>
+                        <span class="stat-label">Total Donations</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count(d => d.DonationDate > DateTime.UtcNow.AddDays(-7))</span>
+                        <span class="stat-label">Last 7 Days</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count(d => d.DonationType == "Money")</span>
+                        <span class="stat-label">Financial</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count(d => d.Status == "Distributed")</span>
+                        <span class="stat-label">Delivered</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Impact Message -->
+            <div class="impact-alert">
+                <h6 class="fw-bold mb-2" style="color: var(--white);">Together We're Making a Difference!</h6>
+                <p class="mb-0" style="color: var(--text-gray);">
+                    Your generosity has helped provide essential support to communities in need.
+                    <strong style="color: var(--accent-purple);">Every donation matters!</strong>
+                </p>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    string GetDonationTypeClass(string type)
+    {
+        return type?.ToLower() switch
+        {
+            "food" => "bg-warning text-dark",
+            "clothing" => "bg-info text-white",
+            "medical" => "bg-danger text-white",
+            "money" => "bg-success text-white",
+            _ => "bg-secondary text-white"
+        };
+    }
+
+    string GetDonationTypeIcon(string type)
+    {
+        return type?.ToLower() switch
+        {
+            "food" => "fas fa-utensils",
+            "clothing" => "fas fa-tshirt",
+            "medical" => "fas fa-first-aid",
+            "money" => "fas fa-money-bill-wave",
+            _ => "fas fa-gift"
+        };
+    }
+
+    string GetStatusClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "bg-warning text-dark",
+            "received" => "bg-info text-white",
+            "distributed" => "bg-success text-white",
+            "cancelled" => "bg-danger text-white",
+            _ => "bg-secondary text-white"
+        };
+    }
+
+    string GetStatusIcon(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "fas fa-clock",
+            "received" => "fas fa-box-open",
+            "distributed" => "fas fa-check-circle",
+            "cancelled" => "fas fa-times-circle",
+            _ => "fas fa-question-circle"
+        };
+    }
+}

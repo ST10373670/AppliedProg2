@@ -1,0 +1,325 @@
+﻿@model AppliedProg2.Models.Volunteer
+@{
+    ViewData["Title"] = "My Volunteer Registration";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --primary-black: black;
+            --dark-gray: black;
+            --light-gray: #2a2a2a;
+            --accent-purple: #a78bfa;
+            --light-purple: #c4b5fd;
+            --bright-purple: #8b5cf6;
+            --white: #ffffff;
+            --off-white: #f5f5f5;
+            --text-gray: #d1d5db;
+            --urgent-red: purple;
+            --warning-orange: purple;
+            --success-green: pink;
+            --info-blue: purple;
+        }
+
+        .registration-container {
+            min-height: 80vh;
+            background: radial-gradient(circle at 20% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%), url('https://images.unsplash.com/photo-1690321607729-bce901c77324?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            padding: 40px 0;
+            color: var(--white);
+        }
+
+        .registration-card {
+            background: var(--dark-gray);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-left: 5px solid var(--accent-purple);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--light-gray) 100%);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-purple);
+        }
+
+        .card-body {
+            padding: 3rem;
+        }
+
+        .volunteer-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), var(--light-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 8px 20px rgba(167, 139, 250, 0.3);
+            border: 4px solid var(--light-gray);
+        }
+
+            .volunteer-avatar i {
+                font-size: 3rem;
+                color: var(--primary-black);
+            }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .info-item {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .info-label {
+            color: var(--accent-purple);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+            .info-label i {
+                margin-right: 8px;
+                width: 16px;
+                text-align: center;
+            }
+
+        .info-value {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+            color: var(--white);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .action-buttons {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--light-gray);
+            text-align: center;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, var(--accent-purple), var(--light-purple));
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 700;
+            color: var(--primary-black);
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
+        }
+
+            .btn-edit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
+                background: linear-gradient(135deg, var(--light-purple), var(--accent-purple));
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--accent-purple);
+            margin-bottom: 1.5rem;
+        }
+
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .skill-tag {
+            background: rgba(167, 139, 250, 0.1);
+            color: var(--accent-purple);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .transportation-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid var(--success-green);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--accent-purple);
+            color: var(--accent-purple);
+            background: transparent;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+            .btn-outline-primary:hover {
+                background: var(--accent-purple);
+                color: var(--primary-black);
+            }
+
+        @@media (max-width: 768px) {
+            .card-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+}
+
+<div class="registration-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="registration-card">
+                    <div class="card-header">
+                        <h2 class="mb-0">
+                            <i class="fas fa-user-check"></i> My Volunteer Registration
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        @if (Model == null)
+                        {
+                            <!-- Not Registered State -->
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <h3 class="text-muted mb-3">Not Yet Registered</h3>
+                                <p class="text-muted mb-4">You haven't registered as a volunteer yet. Join our amazing team and make a difference!</p>
+                                <a asp-action="Register" class="btn-edit">
+                                    <i class="fas fa-user-plus me-2"></i>Register as Volunteer
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Volunteer Information -->
+                            <div class="text-center mb-4">
+                                <div class="volunteer-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <h3 class="mb-2" style="color: var(--accent-yellow);">@Model.User?.FirstName @Model.User?.LastName</h3>
+                                <span class="status-badge">
+                                    <i class="fas fa-circle-check me-2"></i>@Model.Status
+                                </span>
+                                <p class="text-muted mt-2">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Registered: @Model.RegisteredAt.ToString("MMM dd, yyyy")
+                                </p>
+                            </div>
+
+                            <!-- Volunteer Details -->
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-tools"></i>Skills & Expertise
+                                    </div>
+                                    <div class="info-value">
+                                        <div class="skills-tags">
+                                            @foreach (var skill in Model.Skills.Split(',').Take(5))
+                                            {
+                                                <span class="skill-tag">@skill.Trim()</span>
+                                            }
+                                            @if (Model.Skills.Split(',').Length > 5)
+                                            {
+                                                <span class="skill-tag">+@(Model.Skills.Split(',').Length - 5) more</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-calendar-check"></i>Availability
+                                    </div>
+                                    <div class="info-value">@Model.Availability</div>
+                                </div>
+
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-map-marker-alt"></i>Preferred Location
+                                    </div>
+                                    <div class="info-value">@Model.PreferredLocation</div>
+                                </div>
+
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-phone-alt"></i>Emergency Contact
+                                    </div>
+                                    <div class="info-value">@Model.EmergencyContact</div>
+                                </div>
+
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-car"></i>Transportation
+                                    </div>
+                                    <div class="info-value">
+                                        @if (Model.HasTransportation)
+                                        {
+                                            <div class="transportation-indicator">
+                                                <i class="fas fa-check"></i> Has Transportation
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted"><i class="fas fa-times-circle me-2"></i>Not Available</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <a asp-action="Register" class="btn-edit me-3">
+                                    <i class="fas fa-edit me-2"></i>Update Registration
+                                </a>
+                                <a asp-action="Index" class="btn btn-outline-primary">
+                                    <i class="fas fa-users me-2"></i>View All Volunteers
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,580 @@
+﻿@model IEnumerable<AppliedProg2.Models.Donation>
+@{
+    ViewData["Title"] = "My Donations";
+}
+
+<style>
+    :root {
+        --primary-black: #0a0a0a;
+        --dark-gray: #1a1a1a;
+        --light-gray: #2a2a2a;
+        --accent-purple: #a78bfa;
+        --light-purple: #c4b5fd;
+        --bright-purple: #8b5cf6;
+        --white: #ffffff;
+        --off-white: #f5f5f5;
+        --text-gray: #d1d5db;
+        --success-green: #10b981;
+        --warning-orange: #f59e0b;
+        --error-red: #ef4444;
+        --info-blue: #3b82f6;
+    }
+
+    .my-donations-container {
+        min-height: 100vh;
+        background: radial-gradient(circle at 20% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%), url('https://images.unsplash.com/photo-1690321607729-bce901c77324?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+        background-size: cover;
+        background-position: center;
+        background-blend-mode: overlay;
+        padding: 20px 0;
+        color: var(--white);
+    }
+
+    .page-header {
+        background: var(--light-gray);
+        color: var(--white);
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 20px 20px;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 3px solid var(--accent-purple);
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-new-donation {
+        background: linear-gradient(135deg, var(--accent-purple), var(--light-purple));
+        border: none;
+        border-radius: 8px;
+        padding: 12px 25px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
+        color: var(--primary-black);
+    }
+
+        .btn-new-donation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
+            background: linear-gradient(135deg, var(--light-purple), var(--accent-purple));
+        }
+
+    .donations-table {
+        background: var(--dark-gray);
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        border: 1px solid var(--light-gray);
+    }
+
+    .table-header {
+        background: var(--light-gray);
+        color: var(--white);
+        padding: 1.5rem;
+        border-bottom: none;
+        border-bottom: 2px solid var(--accent-purple);
+    }
+
+        .table-header h3 {
+            margin: 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+    .table {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        color: var(--white);
+    }
+
+        .table thead th {
+            background: var(--light-gray);
+            color: var(--accent-purple);
+            font-weight: 700;
+            padding: 1rem 1.25rem;
+            border-bottom: 2px solid var(--light-gray);
+            border-top: none;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            background: var(--dark-gray);
+        }
+
+            .table tbody tr:hover {
+                background: var(--light-gray);
+                transform: translateX(5px);
+                border-left: 3px solid var(--accent-purple);
+            }
+
+        .table tbody td {
+            padding: 1.25rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+    .donation-badge {
+        border-radius: 20px;
+        padding: 6px 15px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .status-badge {
+        border-radius: 20px;
+        padding: 6px 15px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .empty-state {
+        background: var(--dark-gray);
+        border-radius: 12px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        margin: 2rem 0;
+        border: 1px solid var(--light-gray);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        color: var(--accent-purple);
+        margin-bottom: 1rem;
+    }
+
+    .impact-summary {
+        background: var(--light-gray);
+        border: 1px solid var(--accent-purple);
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .summary-title {
+        color: var(--white);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .summary-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        text-align: center;
+    }
+
+    .stat-item {
+        padding: 1rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--accent-purple);
+        display: block;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-gray);
+        margin-top: 0.5rem;
+    }
+
+    .btn-view-all {
+        background: var(--light-gray);
+        border: 1px solid var(--accent-purple);
+        border-radius: 8px;
+        padding: 10px 25px;
+        font-weight: 600;
+        color: var(--white);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(167, 139, 250, 0.2);
+    }
+
+        .btn-view-all:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(167, 139, 250, 0.3);
+            background: var(--accent-purple);
+            color: var(--primary-black);
+        }
+
+    .alert-info {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid var(--info-blue);
+        border-radius: 8px;
+        color: var(--info-blue);
+        font-weight: 600;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border-left: 5px solid var(--accent-purple);
+    }
+
+    .alert-link {
+        color: var(--accent-purple);
+        font-weight: 700;
+        text-decoration: none;
+        border-bottom: 2px solid var(--accent-purple);
+        transition: all 0.3s ease;
+    }
+
+        .alert-link:hover {
+            color: var(--light-purple);
+            border-bottom-color: var(--light-purple);
+        }
+
+    /* Animation for table rows */
+    keyframes fadeInUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .table tbody tr {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+        /* Staggered animation for rows */
+        .table tbody tr:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .table tbody tr:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .table tbody tr:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .table tbody tr:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .table tbody tr:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+    /* Responsive design */
+    @@media (max-width: 768px) {
+        .page-header {
+            padding: 2rem 0;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .btn-new-donation {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .donations-table {
+            border-radius: 8px;
+        }
+
+        .table thead {
+            display: none;
+        }
+
+        .table tbody tr {
+            display: block;
+            margin-bottom: 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 1rem;
+            background: var(--dark-gray);
+        }
+
+        .table tbody td {
+            display: block;
+            text-align: right;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+            .table tbody td:before {
+                content: attr(data-label);
+                float: left;
+                font-weight: 700;
+                color: var(--accent-purple);
+            }
+
+            .table tbody td:last-child {
+                border-bottom: none;
+            }
+
+        .summary-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .text-muted {
+        color: var(--text-gray) !important;
+    }
+
+    .text-primary {
+        color: var(--accent-purple) !important;
+    }
+
+    .text-warning {
+        color: var(--warning-orange) !important;
+    }
+
+    .bg-warning {
+        background-color: var(--warning-orange) !important;
+        color: var(--primary-black) !important;
+    }
+
+    .bg-info {
+        background-color: var(--info-blue) !important;
+        color: var(--white) !important;
+    }
+
+    .bg-danger {
+        background-color: var(--error-red) !important;
+        color: var(--white) !important;
+    }
+
+    .bg-success {
+        background-color: var(--success-green) !important;
+        color: var(--white) !important;
+    }
+
+    .bg-secondary {
+        background-color: var(--light-gray) !important;
+        color: var(--white) !important;
+    }
+</style>
+
+<div class="my-donations-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="header-content d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1 class="fw-bold display-5 mb-2">
+                        <i class="fas fa-donate"></i> My Donations
+                    </h1>
+                    <p class="lead mb-0" style="color: var(--text-gray);">Track your generous contributions and their impact</p>
+                </div>
+                <a asp-action="Create" class="btn btn-new-donation">
+                    <i class="fas fa-plus"></i> Make New Donation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        @if (!Model.Any())
+        {
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <h3 class="fw-bold mb-3" style="color: var(--white);">No Donations Yet</h3>
+                <p class="mb-4" style="color: var(--text-gray);">Start your journey of making a difference today!</p>
+                <a asp-action="Create" class="btn btn-new-donation">
+                    <i class="fas fa-plus"></i> Make First Donation
+                </a>
+            </div>
+        }
+        else
+        {
+            <!-- Impact Summary -->
+            <div class="impact-summary">
+                <h5 class="summary-title">
+                    <i class="fas fa-chart-line"></i> Your Donation Impact
+                </h5>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count()</span>
+                        <span class="stat-label">Total Donations</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count(d => d.DonationDate > DateTime.UtcNow.AddDays(-30))</span>
+                        <span class="stat-label">Last 30 Days</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count(d => d.Status == "Distributed")</span>
+                        <span class="stat-label">Delivered</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count(d => d.DonationType == "Money")</span>
+                        <span class="stat-label">Financial Aid</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donations Table -->
+            <div class="donations-table">
+                <div class="table-header">
+                    <h3><i class="fas fa-list-check"></i> Your Donation History</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Target Area</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var donation in Model)
+                            {
+                                <tr>
+                                    <td data-label="Type">
+                                        <span class="donation-badge @GetDonationTypeClass(donation.DonationType)">
+                                            <i class="@GetDonationTypeIcon(donation.DonationType)"></i> @donation.DonationType
+                                        </span>
+                                    </td>
+                                    <td data-label="Description">
+                                        <strong>@donation.ItemDescription</strong>
+                                        @if (!string.IsNullOrEmpty(donation.SpecialInstructions))
+                                        {
+                                            <br>
+                                            <small style="color: var(--text-gray);">
+                                                <i class="fas fa-info-circle" style="color: var(--warning-orange);"></i>
+                                                @donation.SpecialInstructions
+                                            </small>
+                                        }
+                                    </td>
+                                    <td data-label="Quantity">
+                                        <span class="fw-bold" style="color: var(--accent-yellow);">@donation.Quantity @donation.Unit</span>
+                                    </td>
+                                    <td data-label="Target Area">
+                                        @if (!string.IsNullOrEmpty(donation.TargetArea))
+                                        {
+                                            @donation.TargetArea
+                                        }
+                                        else
+                                        {
+                                            <span style="color: var(--text-gray);">General Relief</span>
+                                        }
+                                    </td>
+                                    <td data-label="Date">
+                                        <div class="text-nowrap">
+                                            <i class="fas fa-calendar me-1" style="color: var(--text-gray);"></i>
+                                            @donation.DonationDate.ToString("MMM dd, yyyy")
+                                        </div>
+                                        <small style="color: var(--text-gray);">
+                                            @donation.DonationDate.ToString("hh:mm tt")
+                                        </small>
+                                    </td>
+                                    <td data-label="Status">
+                                        <span class="status-badge @GetStatusClass(donation.Status)">
+                                            <i class="@GetStatusIcon(donation.Status) me-1"></i> @donation.Status
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Celebration Message -->
+            <div class="alert alert-info text-center mt-4">
+                <h6 class="fw-bold mb-2" style="color: var(--white);">Thank You for Your Generosity!</h6>
+                <p class="mb-0" style="color: var(--text-gray);">
+                    Your donations are making a real difference in people's lives.
+                    <strong style="color: var(--accent-yellow);">Every contribution creates hope and support for those in need.</strong>
+                </p>
+            </div>
+        }
+    </div>
+
+    <!-- View All Donations Button -->
+    <div class="container mt-4">
+        <div class="text-center">
+            <a asp-action="AllDonations" class="btn btn-view-all">
+                <i class="fas fa-list"></i> View All Community Donations
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@functions {
+    string GetDonationTypeClass(string type)
+    {
+        return type?.ToLower() switch
+        {
+            "food" => "bg-warning text-dark",
+            "clothing" => "bg-info text-white",
+            "medical" => "bg-danger text-white",
+            "money" => "bg-success text-white",
+            _ => "bg-secondary text-white"
+        };
+    }
+
+    string GetDonationTypeIcon(string type)
+    {
+        return type?.ToLower() switch
+        {
+            "food" => "fas fa-utensils",
+            "clothing" => "fas fa-tshirt",
+            "medical" => "fas fa-first-aid",
+            "money" => "fas fa-money-bill-wave",
+            _ => "fas fa-gift"
+        };
+    }
+
+    string GetStatusClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "bg-warning text-dark",
+            "received" => "bg-info text-white",
+            "distributed" => "bg-success text-white",
+            "cancelled" => "bg-danger text-white",
+            _ => "bg-secondary text-white"
+        };
+    }
+
+    string GetStatusIcon(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "fas fa-clock",
+            "received" => "fas fa-box-open",
+            "distributed" => "fas fa-check-circle",
+            "cancelled" => "fas fa-times-circle",
+            _ => "fas fa-question-circle"
+        };
+    }
+}

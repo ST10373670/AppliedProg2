@@ -1,0 +1,564 @@
+﻿@model AppliedProg2.Models.IncidentReport
+@{
+    ViewData["Title"] = "Incident Details";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --primary-black: #0a0a0a;
+            --dark-gray: grey;
+            --light-gray: #2a2a2a;
+            --accent-purple: #a78bfa;
+            --light-purple: #c4b5fd;
+            --bright-purple: #8b5cf6;
+            --white: #ffffff;
+            --off-white: #f5f5f5;
+            --text-gray: #d1d5db;
+            --urgent-red: purple;
+            --warning-orange: cyan;
+            --success-green: #10b981;
+            --info-blue: purple;
+        }
+
+        .incident-details-container {
+            min-height: 80vh;
+            background: radial-gradient(circle at 20% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%), url('https://images.unsplash.com/photo-1690321607729-bce901c77324?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            padding: 20px 0;
+            color: var(--white);
+        }
+
+        .incident-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            background: var(--dark-gray);
+            border-left: 5px solid var(--urgent-red);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--light-gray) 100%);
+            color: var(--white);
+            padding: 2rem;
+            border-bottom: 2px solid var(--accent-purple);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 30% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%);
+            }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .urgency-badge {
+            font-size: 1rem;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            color: var(--primary-black);
+        }
+
+        .card-body {
+            padding: 2.5rem;
+            background: var(--dark-gray);
+        }
+
+        .incident-title {
+            color: var(--accent-purple);
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .incident-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-gray);
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--warning-orange);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .info-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            background: var(--light-gray);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+            .info-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(167, 139, 250, 0.2);
+            }
+
+            .info-card .card-header {
+                background: linear-gradient(135deg, var(--light-gray), var(--dark-gray));
+                color: var(--accent-purple);
+                padding: 1rem 1.5rem;
+                border-bottom: 2px solid var(--accent-purple);
+                border-radius: 15px 15px 0 0;
+            }
+
+                .info-card .card-header h6 {
+                    margin: 0;
+                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+                    color: var(--accent-purple);
+                }
+
+            .info-card .card-body {
+                padding: 1.5rem;
+                background: var(--light-gray);
+                border-radius: 0 0 15px 15px;
+            }
+
+        .detail-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--dark-gray);
+        }
+
+            .detail-item:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+            .detail-label i {
+                margin-right: 8px;
+                width: 16px;
+                text-align: center;
+            }
+
+        .detail-value {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .badge-value {
+            float: right;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px dashed var(--light-gray);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, var(--light-gray), var(--dark-gray));
+            border: 2px solid var(--text-gray);
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: 600;
+            color: var(--text-gray);
+            transition: all 0.3s ease;
+        }
+
+            .btn-back:hover {
+                transform: translateY(-2px);
+                background: var(--text-gray);
+                color: var(--primary-black);
+                border-color: var(--text-gray);
+            }
+
+        .btn-donate {
+            background: linear-gradient(135deg, var(--accent-purple), var(--light-purple));
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: 600;
+            color: var(--primary-black);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
+        }
+
+            .btn-donate:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
+                background: linear-gradient(135deg, var(--light-purple), var(--accent-purple));
+            }
+
+        .btn-volunteer {
+            background: linear-gradient(135deg, var(--warning-orange), #e67e22);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: 600;
+            color: var(--white);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+            .btn-volunteer:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+                background: linear-gradient(135deg, #e67e22, var(--warning-orange));
+            }
+
+            .btn-back i, .btn-donate i, .btn-volunteer i {
+                margin-right: 8px;
+            }
+
+        .incident-alert {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(167, 139, 250, 0.05));
+            border: 2px solid var(--accent-purple);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+            .incident-alert h5 {
+                color: var(--accent-purple);
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+
+            .incident-alert p {
+                color: var(--text-gray);
+                margin: 0;
+            }
+
+        /* Urgency level styles */
+        .urgency-critical {
+            background: linear-gradient(135deg, var(--urgent-red), #dc2626);
+            animation: pulse 2s infinite;
+        }
+
+        .urgency-high {
+            background: linear-gradient(135deg, var(--warning-orange), #e67e22);
+        }
+
+        .urgency-medium {
+            background: linear-gradient(135deg, #f59e0b, var(--warning-orange));
+        }
+
+        .urgency-low {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+        }
+
+        keyframes pulse {
+            0%, 100%
+
+        {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        }
+
+        /* Status colors */
+        .status-pending {
+            background: linear-gradient(135deg, var(--warning-orange), #e67e22);
+            color: var(--white);
+        }
+
+        .status-under-review {
+            background: linear-gradient(135deg, var(--info-blue), #2563eb);
+            color: var(--white);
+        }
+
+        .status-in-progress {
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            color: var(--white);
+        }
+
+        .status-resolved {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+            color: var(--white);
+        }
+
+        .badge {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Responsive design */
+        @@media (max-width: 768px) {
+            .incident-details-container {
+                padding: 10px;
+            }
+
+            .card-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .card-header {
+                padding: 1.5rem;
+            }
+
+            .incident-title {
+                font-size: 1.5rem;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+                margin-bottom: 10px;
+                margin-left: 0 !important;
+            }
+
+            .header-content {
+                text-align: center;
+            }
+
+            .urgency-badge {
+                margin-top: 1rem !important;
+            }
+        }
+    </style>
+}
+
+<div class="incident-details-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="incident-card">
+                    <!-- Header Section -->
+                    <div class="card-header">
+                        <div class="header-content d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h1 class="fw-bold mb-2">
+                                    <i class="fas fa-exclamation-triangle"></i> Incident Details
+                                </h1>
+                                <p class="lead mb-0 opacity-90">Emergency situation requiring immediate attention</p>
+                            </div>
+                            <span class="urgency-badge urgency-@Model.UrgencyLevel?.ToLower() mt-2 mt-md-0">
+                                <i class="@GetUrgencyIcon(Model.UrgencyLevel)"></i> @Model.UrgencyLevel
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Incident Alert Banner -->
+                        <div class="incident-alert">
+                            <h5><i class="fas fa-exclamation-circle"></i> Emergency Situation - Immediate Response Required</h5>
+                            <p class="mb-0">This incident requires urgent community support and resources</p>
+                        </div>
+
+                        <!-- Main Incident Information -->
+                        <div class="row mb-4">
+                            <div class="col-lg-8">
+                                <h2 class="incident-title">@Model.Title</h2>
+                                <div class="incident-description">
+                                    <p class="mb-0">@Model.Description</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mt-4 mt-lg-0">
+                                <div class="info-card h-100">
+                                    <div class="card-header">
+                                        <h6><i class="fas fa-info-circle"></i> Incident Overview</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-sync-alt"></i>Status</div>
+                                            <div class="detail-value">
+                                                <span class="badge status-@Model.Status?.ToLower()?.Replace(" ", "-") badge-value">
+                                                    <i class="@GetStatusIcon(Model.Status)"></i> @Model.Status
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-cloud-showers-heavy"></i>Disaster Type</div>
+                                            <div class="detail-value">
+                                                <span class="badge-value"><i class="@GetDisasterTypeIcon(Model.DisasterType)"></i> @Model.DisasterType</span>
+                                            </div>
+                                        </div>
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-clock"></i>Reported</div>
+                                            <div class="detail-value">
+                                                <span class="badge-value">@Model.ReportedAt.ToString("MMM dd, yyyy 'at' hh:mm tt")</span>
+                                            </div>
+                                        </div>
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-bell"></i>Urgency</div>
+                                            <div class="detail-value">
+                                                <span class="badge urgency-@Model.UrgencyLevel?.ToLower() badge-value">
+                                                    <i class="@GetUrgencyIcon(Model.UrgencyLevel)"></i> @Model.UrgencyLevel
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Information Cards -->
+                        <div class="row">
+                            <!-- Location Details -->
+                            <div class="col-md-6 mb-4">
+                                <div class="info-card h-100">
+                                    <div class="card-header">
+                                        <h6><i class="fas fa-map-marker-alt"></i> Location Details</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-location-dot"></i>Location</div>
+                                            <div class="detail-value">@Model.Location</div>
+                                        </div>
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-map"></i>Affected Areas</div>
+                                            <div class="detail-value">
+                                                @if (!string.IsNullOrEmpty(Model.AffectedAreas))
+                                                {
+                                                    @Model.AffectedAreas
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Areas not specified</span>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-calendar-day"></i>Incident Date</div>
+                                            <div class="detail-value">@Model.IncidentDate.ToString("MMMM dd, yyyy 'at' hh:mm tt")</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reporter Information -->
+                            <div class="col-md-6 mb-4">
+                                <div class="info-card h-100">
+                                    <div class="card-header">
+                                        <h6><i class="fas fa-user"></i> Reporter Information</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-user"></i>Reported By</div>
+                                            <div class="detail-value">@Model.User?.Username</div>
+                                        </div>
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-envelope"></i>Contact Email</div>
+                                            <div class="detail-value">@Model.User?.Email</div>
+                                        </div>
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-clock"></i>Report Time</div>
+                                            <div class="detail-value">@Model.ReportedAt.ToString("MMMM dd, yyyy 'at' hh:mm tt")</div>
+                                        </div>
+                                        <div class="detail-item">
+                                            <div class="detail-label"><i class="fas fa-hourglass-half"></i>Time Since Report</div>
+                                            <div class="detail-value">
+                                                @{
+                                                    var timeSinceReport = DateTime.UtcNow - Model.ReportedAt;
+                                                    if (timeSinceReport.TotalHours < 1)
+                                                    {
+                                                        <span class="text-success"><i class="fas fa-circle-check"></i> Just now</span>
+                                                    }
+                                                    else if (timeSinceReport.TotalHours < 24)
+                                                    {
+                                                        <span class="text-warning"><i class="fas fa-clock"></i> @((int)timeSinceReport.TotalHours) hours ago</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger"><i class="fas fa-exclamation-triangle"></i> @((int)timeSinceReport.TotalDays) days ago</span>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons text-center">
+                            <div class="row justify-content-center">
+                                <div class="col-auto">
+                                    <a asp-action="Index" class="btn btn-back">
+                                        <i class="fas fa-arrow-left"></i> Back to Incidents
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    <a asp-controller="Donation" asp-action="Create" class="btn btn-donate ms-2">
+                                        <i class="fas fa-donate"></i> Donate to Help
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    <a asp-controller="Volunteer" asp-action="Register" class="btn btn-volunteer ms-2">
+                                        <i class="fas fa-hands-helping"></i> Volunteer to Assist
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetUrgencyIcon(string urgency)
+    {
+        return urgency?.ToLower() switch
+        {
+            "critical" => "fas fa-circle-exclamation",
+            "high" => "fas fa-triangle-exclamation",
+            "medium" => "fas fa-exclamation",
+            "low" => "fas fa-info-circle",
+            _ => "fas fa-circle"
+        };
+    }
+
+    string GetStatusIcon(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "fas fa-clock",
+            "under review" => "fas fa-search",
+            "in progress" => "fas fa-tools",
+            "resolved" => "fas fa-check-circle",
+            _ => "fas fa-question-circle"
+        };
+    }
+
+    string GetDisasterTypeIcon(string type)
+    {
+        return type?.ToLower() switch
+        {
+            "flood" => "fas fa-water",
+            "fire" => "fas fa-fire",
+            "earthquake" => "fas fa-mountain",
+            "storm" => "fas fa-wind",
+            "drought" => "fas fa-sun",
+            "landslide" => "fas fa-hill-rockslide",
+            _ => "fas fa-cloud-bolt"
+        };
+    }
+}

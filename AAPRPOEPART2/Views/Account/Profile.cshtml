@@ -1,0 +1,64 @@
+﻿@model AppliedProg2.Models.User
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-info text-white text-center">
+                    <h4 class="mb-0"><i class="fas fa-user-circle"></i> User Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-3 text-center">
+                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm"
+                                 style="width: 120px; height: 120px;">
+                                <i class="fas fa-user fa-4x text-secondary"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <dl class="row">
+                                <dt class="col-sm-4 fw-bold">Username</dt>
+                                <dd class="col-sm-8">@Model.Username</dd>
+
+                                <dt class="col-sm-4 fw-bold">Email</dt>
+                                <dd class="col-sm-8">@Model.Email</dd>
+
+                                <dt class="col-sm-4 fw-bold">Full Name</dt>
+                                <dd class="col-sm-8">@Model.FirstName @Model.LastName</dd>
+
+                                <dt class="col-sm-4 fw-bold">Phone</dt>
+                                <dd class="col-sm-8">@(Model.PhoneNumber ?? "Not provided")</dd>
+
+                                <dt class="col-sm-4 fw-bold">Member Since</dt>
+                                <dd class="col-sm-8">@Model.CreatedAt.ToString("MMMM dd, yyyy")</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h5 class="mb-3">Quick Actions</h5>
+                            <div class="d-grid gap-2 d-md-flex">
+                                <a asp-controller="Incident" asp-action="Report" class="btn btn-outline-danger btn-lg me-md-2">
+                                    <i class="fas fa-exclamation-triangle"></i> Report Incident
+                                </a>
+                                <a asp-controller="Donation" asp-action="Create" class="btn btn-outline-success btn-lg me-md-2">
+                                    <i class="fas fa-donate"></i> Make Donation
+                                </a>
+                                <a asp-controller="Volunteer" asp-action="Register" class="btn btn-outline-warning btn-lg">
+                                    <i class="fas fa-hands-helping"></i> Volunteer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

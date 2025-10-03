@@ -1,0 +1,295 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Gift Of The Givers Relief System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --light-gray: #2a2a2a;
+            --accent-purple: #a78bfa;
+            --light-purple: #c4b5fd;
+            --bright-purple: #8b5cf6;
+            --white: #ffffff;
+            --off-white: #f5f5f5;
+            --text-gray: #d1d5db;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --error-red: #ef4444;
+            --info-blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-gray);
+            background-color: var(--primary-black);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-gray);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--dark-gray) 100%) !important;
+            border-bottom: 2px solid var(--accent-purple);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--accent-purple) !important;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+        }
+
+        .nav-link {
+            color: var(--text-gray) !important;
+            transition: color 0.3s ease;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+        }
+
+            .nav-link:hover {
+                color: var(--light-purple) !important;
+                background-color: rgba(167, 139, 250, 0.1);
+                border-radius: 4px;
+            }
+
+        .dropdown-menu {
+            background-color: var(--dark-gray);
+            border: 1px solid var(--light-gray);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .dropdown-item {
+            color: var(--text-gray);
+            font-weight: 400;
+            padding: 0.6rem 1.2rem;
+        }
+
+            .dropdown-item:hover {
+                background-color: rgba(167, 139, 250, 0.1);
+                color: var(--light-purple);
+            }
+
+        /* Simplified Footer Styles */
+        .footer {
+            background: var(--dark-gray);
+            color: var(--text-gray);
+            padding: 2rem 0;
+            border-top: 2px solid var(--accent-purple);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-link {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+            .footer-link:hover {
+                color: var(--light-purple);
+            }
+
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--light-gray);
+            color: var(--accent-purple);
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+            .social-icon:hover {
+                background: var(--accent-purple);
+                color: var(--primary-black);
+                transform: translateY(-2px);
+            }
+
+        /* Main content styling */
+        main {
+            min-height: calc(100vh - 200px);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-purple);
+            border-color: var(--accent-purple);
+            color: var(--primary-black);
+            font-weight: 500;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--light-purple);
+                border-color: var(--light-purple);
+                color: var(--primary-black);
+            }
+
+        .card {
+            background-color: var(--dark-gray);
+            border: 1px solid var(--light-gray);
+            color: var(--text-gray);
+        }
+
+        .table {
+            color: var(--text-gray);
+        }
+
+            .table th {
+                background-color: var(--light-gray);
+                color: var(--white);
+                border-color: var(--light-gray);
+            }
+
+            .table td {
+                border-color: var(--light-gray);
+            }
+
+        /* Responsive Footer */
+        media (max-width: 768px) {
+            .footer-content
+
+        {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .footer-links {
+            justify-content: center;
+        }
+
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-hands-helping"></i> Gift Of The Givers Relief System
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                  
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Incident" asp-action="Index">Incidents</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Donation" asp-action="Index">Donations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Volunteer" asp-action="Index">Volunteers</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user"></i> @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Profile</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Donation" asp-action="Index">My Donations</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Volunteer" asp-action="MyRegistration">My Volunteer Registration</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="copyright">
+                    &copy; 2024 Disaster Alleviation Foundation. All rights reserved.
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

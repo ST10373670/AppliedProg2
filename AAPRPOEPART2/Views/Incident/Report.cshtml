@@ -1,0 +1,572 @@
+﻿@model AppliedProg2.Models.IncidentReportViewModel
+@{
+    ViewData["Title"] = "Report Incident";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --primary-black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --light-gray: #2a2a2a;
+            --accent-purple: #a78bfa;
+            --light-purple: #c4b5fd;
+            --bright-purple: #8b5cf6;
+            --white: #ffffff;
+            --off-white: #f5f5f5;
+            --text-gray: #d1d5db;
+            --urgent-red: purple;
+            --warning-orange: purple;
+            --success-green: blue;
+            --info-blue: purple;
+        }
+
+        .incident-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 20% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%), url('https://images.unsplash.com/photo-1690321607729-bce901c77324?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            padding: 20px 0;
+            color: var(--white);
+        }
+
+        .incident-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: var(--dark-gray);
+            border-left: 5px solid var(--urgent-red);
+        }
+
+            .incident-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 40px rgba(167, 139, 250, 0.2);
+            }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--urgent-red) 0%, #dc2626 100%);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            }
+
+            .card-header h4 {
+                position: relative;
+                z-index: 1;
+                font-weight: 700;
+                margin: 0;
+                font-size: 1.8rem;
+            }
+
+            .card-header i {
+                margin-right: 10px;
+                font-size: 1.5rem;
+            }
+
+        .card-body {
+            padding: 2.5rem;
+            background: var(--dark-gray);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--accent-purple);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+            .form-label i {
+                margin-right: 8px;
+                font-size: 1.1rem;
+                width: 16px;
+                text-align: center;
+            }
+
+        .form-control {
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--light-gray);
+            color: var(--white);
+        }
+
+            .form-control:focus {
+                border-color: var(--accent-purple);
+                box-shadow: 0 0 0 0.2rem rgba(167, 139, 250, 0.25);
+                background: var(--light-gray);
+                color: var(--white);
+            }
+
+            .form-control.urgent-field {
+                border-left: 4px solid var(--urgent-red);
+            }
+
+            .form-control.important-field {
+                border-left: 4px solid var(--warning-orange);
+            }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a78bfa' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 16px 12px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--urgent-red), #dc2626);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            color: var(--white);
+        }
+
+            .btn-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+                background: linear-gradient(135deg, #dc2626, #b91c1c);
+            }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, var(--light-gray), var(--dark-gray));
+            border: 2px solid var(--text-gray);
+            border-radius: 12px;
+            padding: 14px 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            color: var(--text-gray);
+        }
+
+            .btn-cancel:hover {
+                transform: translateY(-2px);
+                background: var(--text-gray);
+                color: var(--primary-black);
+                border-color: var(--text-gray);
+            }
+
+            .btn-submit i, .btn-cancel i {
+                margin-right: 8px;
+            }
+
+        .text-danger {
+            color: var(--urgent-red) !important;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+            .text-danger i {
+                margin-right: 5px;
+            }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+            border: 2px solid var(--success-green);
+            border-radius: 12px;
+            color: var(--success-green);
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+            .alert-success i {
+                margin-right: 8px;
+            }
+
+        .incident-decoration {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(167, 139, 250, 0.05));
+            border-radius: 12px;
+            border-left: 4px solid var(--warning-orange);
+        }
+
+        .decoration-icons {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-purple);
+        }
+
+        .urgency-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-left: 10px;
+            color: var(--white);
+        }
+
+        .urgency-critical {
+            background: var(--urgent-red);
+        }
+
+        .urgency-high {
+            background: var(--warning-orange);
+        }
+
+        .urgency-medium {
+            background: #f59e0b;
+        }
+
+        .urgency-low {
+            background: var(--success-green);
+        }
+
+        .form-hint {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+        }
+
+            .form-hint i {
+                margin-right: 5px;
+                width: 12px;
+                text-align: center;
+            }
+
+        /* Placeholder styling */
+        .form-control::placeholder {
+            color: var(--text-gray);
+            opacity: 0.7;
+        }
+
+        /* Responsive design */
+        @@media (max-width: 768px) {
+            .incident-container {
+                padding: 10px;
+            }
+
+            .card-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .card-header {
+                padding: 1.5rem;
+            }
+
+                .card-header h4 {
+                    font-size: 1.5rem;
+                }
+
+            .btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-submit, .btn-cancel {
+                width: 100%;
+            }
+        }
+
+        /* Loading state for button */
+        .btn-submit.loading {
+            position: relative;
+            color: transparent;
+        }
+
+            .btn-submit.loading::after {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                top: 50%;
+                left: 50%;
+                margin-left: -10px;
+                margin-top: -10px;
+                border: 2px solid var(--white);
+                border-radius: 50%;
+                border-top-color: transparent;
+                animation: spin 1s ease-in-out infinite;
+            }
+
+        keyframes spin {
+            to
+
+        {
+            transform: rotate(360deg);
+        }
+
+        }
+
+        /* Emergency pulse animation */
+        keyframes emergencyPulse {
+            0%, 100%
+
+        {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+
+        }
+
+        .incident-card {
+            animation: emergencyPulse 3s ease-in-out infinite;
+        }
+
+        /* Required field indicator */
+        .required::after {
+            content: ' *';
+            color: var(--urgent-red);
+        }
+
+        .validation-summary-errors {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+            border: 2px solid var(--urgent-red);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--urgent-red);
+        }
+
+            .validation-summary-errors ul {
+                margin: 0;
+                padding-left: 1rem;
+            }
+
+            .validation-summary-errors li {
+                margin-bottom: 0.5rem;
+            }
+
+                .validation-summary-errors li:last-child {
+                    margin-bottom: 0;
+                }
+    </style>
+}
+
+<div class="incident-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-10 col-lg-8">
+            <div class="incident-card">
+                <div class="card-header">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Report Emergency Incident</h4>
+                </div>
+                <div class="card-body">
+                    <div class="incident-decoration">
+                        <div class="decoration-icons">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <i class="fas fa-exclamation-circle"></i>
+                            <i class="fas fa-bell"></i>
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <p class="mb-0" style="color: var(--text-gray);"><strong>Urgent Notice:</strong> Please provide accurate information to ensure swift emergency response</p>
+                    </div>
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+                        </div>
+                    }
+
+                    <form asp-action="Report" method="post" id="incidentForm">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="text-danger validation-summary-errors"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Title" class="form-label required">
+                                <i class="fas fa-heading"></i>Incident Title
+                            </label>
+                            <input asp-for="Title" class="form-control urgent-field" placeholder="e.g., Major Flooding in Downtown Area" />
+                            <span asp-validation-for="Title" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                            <div class="form-hint"><i class="fas fa-lightbulb"></i>Be specific and concise about the emergency</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Description" class="form-label required">
+                                <i class="fas fa-file-alt"></i>Incident Description
+                            </label>
+                            <textarea asp-for="Description" class="form-control urgent-field" rows="4" placeholder="Provide detailed information about what happened, current situation, immediate dangers, and any visible damage or injuries..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                            <div class="form-hint"><i class="fas fa-info-circle"></i>Include critical details that emergency responders need to know</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Location" class="form-label required">
+                                        <i class="fas fa-map-marker-alt"></i>Incident Location
+                                    </label>
+                                    <input asp-for="Location" class="form-control urgent-field" placeholder="e.g., Central District, Riverside Area" />
+                                    <span asp-validation-for="Location" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                                    <div class="form-hint"><i class="fas fa-map-pin"></i>Be as specific as possible about the location</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="IncidentDate" class="form-label required">
+                                        <i class="fas fa-calendar-alt"></i>Date & Time
+                                    </label>
+                                    <input asp-for="IncidentDate" class="form-control important-field" type="datetime-local" />
+                                    <span asp-validation-for="IncidentDate" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                                    <div class="form-hint"><i class="fas fa-clock"></i>When did the incident occur or when was it discovered?</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="DisasterType" class="form-label required">
+                                        <i class="fas fa-cloud-showers-heavy"></i>Disaster Type
+                                    </label>
+                                    <select asp-for="DisasterType" class="form-control important-field">
+                                        <option value="">Select Disaster Type</option>
+                                        <option value="Flood">Flood</option>
+                                        <option value="Fire">Fire</option>
+                                        <option value="Earthquake">Earthquake</option>
+                                        <option value="Storm">Storm</option>
+                                        <option value="Drought">Drought</option>
+                                        <option value="Landslide">Landslide</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <span asp-validation-for="DisasterType" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="UrgencyLevel" class="form-label required">
+                                        <i class="fas fa-bell"></i>Urgency Level
+                                    </label>
+                                    <select asp-for="UrgencyLevel" class="form-control urgent-field">
+                                        <option value="">Select Urgency Level</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                        <option value="Critical">Critical</option>
+                                    </select>
+                                    <span asp-validation-for="UrgencyLevel" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="AffectedAreas" class="form-label">
+                                <i class="fas fa-map"></i>Affected Areas
+                            </label>
+                            <input asp-for="AffectedAreas" class="form-control important-field" placeholder="e.g., Residential neighborhoods, Schools, Hospitals, Major roads" />
+                            <span asp-validation-for="AffectedAreas" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                            <div class="form-hint"><i class="fas fa-building"></i>List specific communities, buildings, or infrastructure affected</div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end btn-group">
+                            <a asp-action="Index" class="btn btn-cancel">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-submit" id="submitButton">
+                                <i class="fas fa-paper-plane"></i> Submit Emergency Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Add loading state to button on form submit
+        document.getElementById('incidentForm').addEventListener('submit', function () {
+            const button = document.getElementById('submitButton');
+            button.classList.add('loading');
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-paper-plane"></i> Submitting Emergency Report...';
+        });
+
+        // Auto-set current date and time if field is empty
+        const dateTimeField = document.querySelector('input[type="datetime-local"]');
+        if (dateTimeField && !dateTimeField.value) {
+            const now = new Date();
+            // Format to datetime-local format (YYYY-MM-DDTHH:MM)
+            const formatted = now.toISOString().slice(0, 16);
+            dateTimeField.value = formatted;
+        }
+
+        // Add urgency level visual feedback
+        const urgencySelect = document.querySelector('select[name="UrgencyLevel"]');
+        if (urgencySelect) {
+            urgencySelect.addEventListener('change', function () {
+                const selectedValue = this.value;
+                const form = this.closest('form');
+
+                // Remove existing urgency classes
+                form.classList.remove('urgency-low', 'urgency-medium', 'urgency-high', 'urgency-critical');
+
+                // Add appropriate urgency class
+                if (selectedValue) {
+                    form.classList.add('urgency-' + selectedValue.toLowerCase());
+                }
+            });
+        }
+
+        // Character counter for description
+        const descriptionField = document.querySelector('textarea[name="Description"]');
+        if (descriptionField) {
+            const counter = document.createElement('div');
+            counter.className = 'form-hint';
+            counter.style.textAlign = 'right';
+            descriptionField.parentElement.appendChild(counter);
+
+            descriptionField.addEventListener('input', function () {
+                const count = this.value.length;
+                counter.innerHTML = `<i class="fas fa-text-height"></i>${count} characters (minimum 50 recommended)`;
+
+                if (count < 50) {
+                    counter.style.color = 'var(--urgent-red)';
+                } else if (count < 100) {
+                    counter.style.color = 'var(--warning-orange)';
+                } else {
+                    counter.style.color = 'var(--success-green)';
+                }
+            });
+
+            // Trigger initial count
+            descriptionField.dispatchEvent(new Event('input'));
+        }
+    </script>
+}

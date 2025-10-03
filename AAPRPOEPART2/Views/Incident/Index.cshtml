@@ -1,0 +1,544 @@
+﻿@model IEnumerable<AppliedProg2.Models.IncidentReport>
+@{
+    ViewData["Title"] = "Disaster Incidents";
+}
+
+@section Styles {
+    <style>
+
+        :root {
+            --primary-black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --light-gray: #2a2a2a;
+            --accent-purple: #a78bfa;
+            --light-purple: #c4b5fd;
+            --bright-purple: #8b5cf6;
+            --white: #ffffff;
+            --off-white: #f5f5f5;
+            --text-gray: #d1d5db;
+            --urgent-red: purple;
+            --warning-orange: purple;
+            --success-green: green;
+            --info-blue: purple;
+        }
+
+        .incidents-container {
+            min-height: 80vh;
+            background: radial-gradient(circle at 20% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%), url('https://images.unsplash.com/photo-1690321607729-bce901c77324?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            padding: 20px 0;
+            color: var(--white);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--light-gray) 100%);
+            color: var(--white);
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid var(--accent-purple);
+        }
+
+            .page-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 30% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%);
+            }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-report-incident {
+            background: linear-gradient(135deg, var(--urgent-red), #dc2626);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            color: var(--white);
+        }
+
+            .btn-report-incident:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+                background: linear-gradient(135deg, #dc2626, #b91c1c);
+            }
+
+        .incident-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            background: var(--dark-gray);
+            overflow: hidden;
+            height: 100%;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+            .incident-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(167, 139, 250, 0.2);
+                border-left-color: var(--urgent-red);
+            }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--light-gray), var(--dark-gray));
+            border-bottom: 2px solid var(--accent-purple);
+            padding: 1rem 1.25rem;
+        }
+
+        .urgency-badge {
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            color: var(--primary-black);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            background: var(--dark-gray);
+        }
+
+        .card-title {
+            color: var(--accent-purple);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .card-text {
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .incident-details {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+            .incident-details strong {
+                color: var(--accent-purple);
+            }
+
+            .incident-details i {
+                width: 16px;
+                margin-right: 8px;
+                color: var(--accent-purple);
+            }
+
+        .card-footer {
+            background: var(--light-gray);
+            border-top: 2px solid var(--dark-gray);
+            padding: 1rem 1.25rem;
+        }
+
+        .status-badge {
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--white);
+        }
+
+        .btn-details {
+            background: linear-gradient(135deg, var(--accent-purple), var(--light-purple));
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            color: var(--primary-black);
+            box-shadow: 0 2px 8px rgba(167, 139, 250, 0.3);
+        }
+
+            .btn-details:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(167, 139, 250, 0.4);
+                background: linear-gradient(135deg, var(--light-purple), var(--accent-purple));
+            }
+
+        .empty-state {
+            background: var(--dark-gray);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            margin: 2rem 0;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--accent-purple);
+            margin-bottom: 1rem;
+        }
+
+        .stats-overview {
+            background: linear-gradient(135deg, var(--light-gray), var(--dark-gray));
+            border: 2px solid var(--accent-purple);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-purple);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-top: 0.5rem;
+        }
+
+        /* Urgency level specific styles */
+        .urgency-critical {
+            background: linear-gradient(135deg, var(--urgent-red), #dc2626);
+            color: var(--white);
+            animation: pulse 2s infinite;
+        }
+
+        .urgency-high {
+            background: linear-gradient(135deg, var(--warning-orange), #e67e22);
+            color: var(--white);
+        }
+
+        .urgency-medium {
+            background: linear-gradient(135deg, #f59e0b, var(--warning-orange));
+            color: var(--white);
+        }
+
+        .urgency-low {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+            color: var(--white);
+        }
+
+        keyframes pulse {
+            0%, 100%
+
+        {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        }
+
+        /* Animation for cards */
+        keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .incident-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(167, 139, 250, 0.05));
+            border: 2px solid var(--accent-purple);
+            border-radius: 12px;
+            color: var(--text-gray);
+        }
+
+            .alert-warning h6 {
+                color: var(--accent-purple);
+            }
+
+        .text-muted {
+            color: var(--text-gray) !important;
+        }
+
+        .bg-secondary {
+            background: var(--light-gray) !important;
+            color: var(--text-gray) !important;
+        }
+
+        /* Status badge styles */
+        .bg-warning {
+            background: linear-gradient(135deg, var(--warning-orange), #e67e22) !important;
+        }
+
+        .bg-info {
+            background: linear-gradient(135deg, var(--info-blue), #2563eb) !important;
+        }
+
+        .bg-primary {
+            background: linear-gradient(135deg, #a855f7, #9333ea) !important;
+        }
+
+        .bg-success {
+            background: linear-gradient(135deg, var(--success-green), #059669) !important;
+        }
+
+        /* Responsive design */
+        @@media (max-width: 768px) {
+            .page-header {
+                padding: 2rem 0;
+                border-radius: 0 0 15px 15px;
+            }
+
+            .header-content {
+                text-align: center;
+            }
+
+            .btn-report-incident {
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .empty-state {
+                padding: 2rem 1rem;
+            }
+        }
+
+        /* Staggered animation for cards */
+        .incident-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .incident-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .incident-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .incident-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .incident-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .incident-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+    </style>
+}
+
+<div class="incidents-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="header-content d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1 class="fw-bold display-5 mb-2">
+                        <i class="fas fa-exclamation-triangle"></i> Disaster Incidents
+                    </h1>
+                    <p class="lead mb-0 opacity-90">Active emergency situations requiring community support</p>
+                </div>
+                <a asp-action="Report" class="btn btn-report-incident">
+                    <i class="fas fa-plus"></i> Report New Incident
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        @if (!Model.Any())
+        {
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="fw-bold text-muted mb-3">No Active Incidents</h3>
+                <p class="text-muted mb-4">Great news! There are currently no active disaster incidents reported.</p>
+                <a asp-action="Report" class="btn btn-report-incident">
+                    <i class="fas fa-plus"></i> Report First Incident
+                </a>
+            </div>
+        }
+        else
+        {
+            <!-- Statistics Overview -->
+            <div class="stats-overview">
+                <h5 class="fw-bold text-center mb-3" style="color: var(--accent-yellow);">
+                    <i class="fas fa-chart-bar"></i> Incident Overview
+                </h5>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count()</span>
+                        <span class="stat-label">Total Incidents</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count(i => i.UrgencyLevel == "Critical")</span>
+                        <span class="stat-label"><i class="fas fa-circle-exclamation"></i> Critical</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count(i => i.UrgencyLevel == "High")</span>
+                        <span class="stat-label"><i class="fas fa-triangle-exclamation"></i> High Priority</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.Count(i => i.Status == "In Progress")</span>
+                        <span class="stat-label">Active Responses</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incidents Grid -->
+            <div class="row">
+                @foreach (var incident in Model)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="incident-card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span class="urgency-badge urgency-@incident.UrgencyLevel?.ToLower()">
+                                    <i class="@GetUrgencyIcon(incident.UrgencyLevel)"></i> @incident.UrgencyLevel
+                                </span>
+                                <small class="text-muted fw-bold">
+                                    <i class="fas fa-calendar me-1"></i>@incident.ReportedAt.ToString("MMM dd")
+                                </small>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">@incident.Title</h5>
+                                <p class="card-text">@incident.Description</p>
+                                <div class="incident-details">
+                                    <p class="mb-2">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <strong>Location:</strong> @incident.Location
+                                    </p>
+                                    <p class="mb-2">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <strong>Incident Date:</strong> @incident.IncidentDate.ToString("MMM dd, yyyy 'at' hh:mm tt")
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-tag"></i>
+                                        <strong>Type:</strong>
+                                        <span class="badge bg-secondary"><i class="@GetDisasterTypeIcon(incident.DisasterType)"></i> @incident.DisasterType</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                                <span class="status-badge @GetStatusClass(incident.Status)">
+                                    <i class="@GetStatusIcon(incident.Status)"></i> @incident.Status
+                                </span>
+                                <a asp-action="Details" asp-route-id="@incident.IncidentId" class="btn btn-details">
+                                    <i class="fas fa-eye me-1"></i> Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Emergency Alert -->
+            <div class="alert alert-warning text-center mt-4">
+                <h6 class="fw-bold mb-2"><i class="fas fa-exclamation-circle"></i> Emergency Response Needed</h6>
+                <p class="mb-0">
+                    These incidents require immediate community support.
+                    <strong>Consider donating or volunteering to help those affected.</strong>
+                </p>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    string GetUrgencyIcon(string urgency)
+    {
+        return urgency?.ToLower() switch
+        {
+            "critical" => "fas fa-circle-exclamation",
+            "high" => "fas fa-triangle-exclamation",
+            "medium" => "fas fa-exclamation",
+            "low" => "fas fa-info-circle",
+            _ => "fas fa-circle"
+        };
+    }
+
+    string GetStatusClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "bg-warning",
+            "under review" => "bg-info",
+            "in progress" => "bg-primary",
+            "resolved" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+
+    string GetStatusIcon(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "fas fa-clock",
+            "under review" => "fas fa-search",
+            "in progress" => "fas fa-tools",
+            "resolved" => "fas fa-check-circle",
+            _ => "fas fa-question-circle"
+        };
+    }
+
+    string GetDisasterTypeIcon(string type)
+    {
+        return type?.ToLower() switch
+        {
+            "flood" => "fas fa-water",
+            "fire" => "fas fa-fire",
+            "earthquake" => "fas fa-mountain",
+            "storm" => "fas fa-wind",
+            "drought" => "fas fa-sun",
+            "landslide" => "fas fa-hill-rockslide",
+            _ => "fas fa-cloud-bolt"
+        };
+    }
+}

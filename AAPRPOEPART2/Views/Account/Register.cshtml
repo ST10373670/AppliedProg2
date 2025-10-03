@@ -1,0 +1,596 @@
+﻿@model AppliedProg2.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    :root {
+        --primary-black: #0a0a0a;
+        --dark-gray: #1a1a1a;
+        --light-gray: #2a2a2a;
+        --accent-purple: #a78bfa;
+        --light-purple: #c4b5fd;
+        --bright-purple: #8b5cf6;
+        --white: #ffffff;
+        --off-white: #f5f5f5;
+        --text-gray: #d1d5db;
+        --error-red: #ef4444;
+        --success-green: #10b981;
+    }
+
+    * {
+        box-sizing: border-box;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background-color: var(--primary-black);
+        margin: 0;
+        padding: 0;
+        color: var(--white);
+    }
+
+    .register-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        background: radial-gradient(circle at 20% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%), url('https://images.unsplash.com/photo-1690321607729-bce901c77324?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+        background-size: cover;
+        background-position: center;
+        background-blend-mode: overlay;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 600px;
+        background: var(--dark-gray);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+        border: 1px solid var(--light-gray);
+    }
+
+        .register-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+    .card-header {
+        background: var(--light-gray);
+        color: var(--white);
+        padding: 2rem;
+        text-align: center;
+        border-bottom: 2px solid var(--accent-purple);
+        position: relative;
+    }
+
+        .card-header h4 {
+            font-weight: 700;
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 0.5px;
+        }
+
+            .card-header h4::after {
+                content: '';
+                display: block;
+                width: 50px;
+                height: 3px;
+                background: var(--accent-purple);
+                margin: 10px auto 0;
+                border-radius: 2px;
+            }
+
+    .card-body {
+        padding: 2.5rem;
+        background: var(--dark-gray);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--off-white);
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.95rem;
+        letter-spacing: 0.3px;
+    }
+
+    .form-control {
+        border: 2px solid var(--light-gray);
+        border-radius: 8px;
+        padding: 14px 16px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: var(--primary-black);
+        color: var(--white);
+        width: 100%;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.2);
+            background: var(--primary-black);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: var(--text-gray);
+        }
+
+    .btn-register {
+        background: linear-gradient(135deg, var(--accent-purple), var(--light-purple));
+        border: none;
+        border-radius: 8px;
+        padding: 16px 20px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
+        color: var(--primary-black);
+        width: 100%;
+        margin-top: 1rem;
+        cursor: pointer;
+        letter-spacing: 0.5px;
+    }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
+            background: linear-gradient(135deg, var(--light-purple), var(--accent-purple));
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+    .text-danger {
+        color: var(--error-red) !important;
+        font-size: 0.9rem;
+        margin-top: 5px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--light-gray);
+    }
+
+        .login-link p {
+            margin: 0;
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .login-link a {
+            color: var(--accent-purple);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            position: relative;
+        }
+
+            .login-link a:hover {
+                color: var(--light-purple);
+            }
+
+            .login-link a::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                bottom: -2px;
+                left: 0;
+                background-color: var(--accent-purple);
+                transform: scaleX(0);
+                transform-origin: bottom right;
+                transition: transform 0.3s ease;
+            }
+
+            .login-link a:hover::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+            }
+
+    .validation-summary-errors {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid var(--error-red);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        color: var(--error-red);
+        font-weight: 600;
+    }
+
+        .validation-summary-errors ul {
+            margin: 0;
+            padding-left: 1rem;
+        }
+
+    .alert-success {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid var(--success-green);
+        border-radius: 8px;
+        color: var(--success-green);
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .register-decoration {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .decoration-icons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 1rem;
+    }
+
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--light-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--accent-purple);
+    }
+
+        .icon-circle i {
+            color: var(--accent-purple);
+            font-size: 1.5rem;
+        }
+
+    .form-hint {
+        font-size: 0.8rem;
+        color: var(--text-gray);
+        margin-top: 3px;
+        display: flex;
+        align-items: center;
+    }
+
+        .form-hint i {
+            margin-right: 5px;
+            color: var(--accent-purple);
+        }
+
+    .password-strength {
+        margin-top: 5px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .strength-weak {
+        color: var(--error-red);
+    }
+
+    .strength-medium {
+        color: #f59e0b;
+    }
+
+    .strength-strong {
+        color: var(--success-green);
+    }
+
+    /* Animations */
+    keyframes pulse {
+        0%
+
+    {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-30%, -30%) scale(1.1);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    }
+
+    keyframes float {
+        0%, 100%
+
+    {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    }
+
+    .icon-circle:nth-child(1) {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .icon-circle:nth-child(2) {
+        animation: float 3s ease-in-out infinite 0.5s;
+    }
+
+    .icon-circle:nth-child(3) {
+        animation: float 3s ease-in-out infinite 1s;
+    }
+
+    .icon-circle:nth-child(4) {
+        animation: float 3s ease-in-out infinite 1.5s;
+    }
+
+    /* Responsive design */
+    @@media (max-width: 768px) {
+        .register-container {
+            padding: 10px;
+        }
+
+        .card-body {
+            padding: 2rem 1.5rem;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+        }
+
+            .card-header h4 {
+                font-size: 1.5rem;
+            }
+
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .col-md-6 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .decoration-icons {
+            gap: 15px;
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+        }
+
+            .icon-circle i {
+                font-size: 1.2rem;
+            }
+    }
+
+    /* Loading state for button */
+    .btn-register.loading {
+        position: relative;
+        color: transparent;
+    }
+
+        .btn-register.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid var(--primary-black);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+    keyframes spin {
+        to
+
+    {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    /* Success message animation */
+    keyframes celebrate {
+        0%
+
+    {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+    }
+
+    .alert-success {
+        animation: celebrate 0.5s ease-in-out;
+    }
+
+    /* Focus state for form groups */
+    .form-group.focused .form-label {
+        color: var(--accent-purple);
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-card">
+        <div class="card-header">
+            <h4>Join Our Community</h4>
+        </div>
+        <div class="card-body">
+            <div class="register-decoration">
+                <div class="decoration-icons">
+                   
+                </div>
+                <p style="color: var(--text-gray); margin: 0;">Become part of our mission to make a difference</p>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+                </div>
+            }
+
+            <form asp-action="Register" method="post" id="registerForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Username" class="form-label">Username</label>
+                            <input asp-for="Username" class="form-control" placeholder="Choose a username" />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                            <div class="form-hint">
+                                <i class="fas fa-info-circle"></i> This will be your unique identifier
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Email" class="form-label">Email Address</label>
+                            <input asp-for="Email" class="form-control" placeholder="your.email@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <div class="form-hint">
+                                <i class="fas fa-lock"></i> We'll never share your email
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="FirstName" class="form-label">First Name</label>
+                            <input asp-for="FirstName" class="form-control" placeholder="Enter your first name" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="LastName" class="form-label">Last Name</label>
+                            <input asp-for="LastName" class="form-control" placeholder="Enter your last name" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="+1 (555) 123-4567" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    <div class="form-hint">
+                        <i class="fas fa-phone"></i> Optional - for emergency contact
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Create a strong password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <div class="form-hint">
+                        <i class="fas fa-key"></i> Use at least 8 characters with mixed case and numbers
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn-register" id="registerButton">
+                        Create My Account
+                    </button>
+                </div>
+            </form>
+
+            <div class="login-link">
+                <p>
+                    Already part of our community?
+                    <a asp-action="Login">Sign in to your account</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Add loading state to button on form submit
+        document.getElementById('registerForm').addEventListener('submit', function() {
+            const button = document.getElementById('registerButton');
+            button.classList.add('loading');
+            button.disabled = true;
+        });
+
+        // Password strength indicator (basic implementation)
+        const passwordInput = document.querySelector('input[type="password"]');
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strengthText = '';
+                let strengthClass = '';
+
+                if (password.length === 0) {
+                    strengthText = '';
+                } else if (password.length < 6) {
+                    strengthText = 'Weak password';
+                    strengthClass = 'strength-weak';
+                } else if (password.length < 10) {
+                    strengthText = 'Medium strength';
+                    strengthClass = 'strength-medium';
+                } else {
+                    strengthText = 'Strong password';
+                    strengthClass = 'strength-strong';
+                }
+
+                // Update or create strength indicator
+                let strengthIndicator = this.parentElement.querySelector('.password-strength');
+                if (!strengthIndicator) {
+                    strengthIndicator = document.createElement('div');
+                    strengthIndicator.className = 'password-strength';
+                    this.parentElement.appendChild(strengthIndicator);
+                }
+
+                strengthIndicator.textContent = strengthText;
+                strengthIndicator.className = 'password-strength ' + strengthClass;
+            });
+        }
+
+        // Add focus effects to form inputs
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.parentElement.classList.remove('focused');
+                }
+            });
+        });
+    </script>
+}
